@@ -1,0 +1,1 @@
+/nix/store/2dvfdf9ccncqkvpx34p6i58qymkplcbk-home-manager-files/.flakes/home-manager/global_scripts/startup.sh
