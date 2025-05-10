@@ -4,7 +4,7 @@ let
   ptMono = pkgs.stdenv.mkDerivation {
     pname = "pt-mono";
     version = "1.0";
-    src = ./fonts/PTMono;
+    src = ./PTMono;
     dontUnpack = true;
 
     installPhase = ''
@@ -16,7 +16,7 @@ let
   ppNeue = pkgs.stdenv.mkDerivation {
     pname = "PPNeueMachina";
     version = "1.0";
-    src = ./fonts/PPNeueMachina;
+    src = ./PPNeueMachina;
     dontUnpack = true;
 
     installPhase = ''
