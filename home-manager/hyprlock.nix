@@ -6,7 +6,7 @@
       $scrPath      = ./.hyprlock/scripts/
       $USER         = Andrei
       $host         = uname -n
-      $wallpaper    = ./assets/scenery.jpg
+      $wallpaper    = ./assets/scenery_wallpaper_1.jpg
       $blur         = 1
 
       # ADJUST HERE
