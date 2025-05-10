@@ -9,7 +9,7 @@ let
 
     installPhase = ''
       mkdir -p $out/share/fonts/truetype
-      cp $src/PTMono-Regular $out/share/fonts/truetype/PTMono-Regular.ttf
+      cp $src/PTMono-Regular.ttf $out/share/fonts/truetype/PTMono-Regular.ttf
     '';
   };
 
