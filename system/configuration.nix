@@ -3,9 +3,9 @@
   lib,
   pkgs,
   inputs,
+  fonts,
   host_name,
   user_name,
-  ptMonoFont,
   ...
 }: let
   zsh-vi-mode-custom = pkgs.stdenv.mkDerivation {
@@ -227,9 +227,12 @@ in {
   fonts = {
     packages = with pkgs; [
       (nerdfonts.override {fonts = ["JetBrainsMono"];})
+      inputs.apple-fonts.packages.${system}.sf-pro
+      inputs.apple-fonts.packages.${system}.sf-mono
+      fonts.ptMono
+      fonts.ppNeue
       jetbrains-mono
       font-awesome
-      ptMonoFont
     ];
 
     fontconfig = {

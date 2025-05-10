@@ -24,6 +24,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
   };
 
   outputs = {
@@ -49,19 +50,7 @@
         nur.overlays.default
       ];
     };
-
-    ptMonoFont = pkgs.stdenv.mkDerivation {
-      pname = "pt-mono";
-      version = "1.0";
-      src = ./fonts/PTMono-Regular.ttf;
-
-      dontUnpack = true;
-
-      installPhase = ''
-        mkdir -p $out/share/fonts/truetype
-        cp $src $out/share/fonts/truetype/PTMono-Regular.ttf
-      '';
-    };
+    fonts = import ./fonts { inherit pkgs; };
   in {
     nixosConfigurations = {
       "${host_name}" = nixpkgs.lib.nixosSystem {
@@ -74,7 +63,7 @@
           inherit inputs;
           inherit host_name;
           inherit user_name;
-          inherit ptMonoFont;
+          inherit fonts;
         };
       };
     };

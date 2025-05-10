@@ -361,7 +361,7 @@ in {
 
   gtk = {
     enable = true;
-    font.name = "PT Mono";
+    font.name = "SF Mono";
     font.size = 11; # Or whatever size you prefer
     cursorTheme = {
       name = "Bibata-Modern-Ice";
