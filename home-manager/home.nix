@@ -24,7 +24,6 @@ in {
   home.stateVersion = "24.11";
 
   home.packages = with pkgs; [
-    unstable.azahar
     protontricks
     cartridges
     bottles
@@ -70,6 +69,9 @@ in {
     stremio
     unstable.cemu
     unstable.torzu
+    unstable.melonDS
+    unstable.azahar
+
     unstable.scrcpy
 
     aseprite
@@ -145,13 +147,40 @@ in {
           "easeOutCubic, 0.33, 1, 0.68, 1"
           "fade_curve, 0, 0.55, 0.45, 1"
           "overshot,0.05,0.9,0.1,1.1"
+
+          "wind, 0.05, 0.85, 0.03, 0.97"
+          "winIn, 0.07, 0.88, 0.04, 0.99"
+          "winOut, 0.20, -0.15, 0, 1"
+          "liner, 1, 1, 1, 1"
+          "md3_standard, 0.12, 0, 0, 1"
+          "md3_decel, 0.05, 0.80, 0.10, 0.97"
+          "md3_accel, 0.20, 0, 0.80, 0.08"
+          "overshot, 0.05, 0.85, 0.07, 1.04"
+          "crazyshot, 0.1, 1.22, 0.68, 0.98"
+          "hyprnostretch, 0.05, 0.82, 0.03, 0.94"
+          "menu_decel, 0.05, 0.82, 0, 1"
+          "menu_accel, 0.20, 0, 0.82, 0.10"
+          "easeInOutCirc, 0.75, 0, 0.15, 1"
+          "easeOutCirc, 0, 0.48, 0.38, 1"
+          "easeOutExpo, 0.10, 0.94, 0.23, 0.98"
+          "softAcDecel, 0.20, 0.20, 0.15, 1"
+          "md2, 0.30, 0, 0.15, 1"
+
+          "OutBack, 0.28, 1.40, 0.58, 1"
+          "easeInOutCirc, 0.78, 0, 0.15, 1"
         ];
 
         animation = [
-          "windowsIn,   0, 4, fluent_decel,  popin" # window open
-          "windowsOut,  0, 4, fluent_decel,  popin 80%" # window close.
-          "windowsMove, 1, 2, fluent_decel, slide" # everything in between, moving, dragging, resizing.
-          "workspaces,  1, 4, overshot, slidevert" # styles: slide, slidevert, fade, slidefade, slidefadevert
+          "windowsIn, 1, 3.2, winIn, slide"
+          "windowsOut, 1, 2.8, easeOutCirc"
+          "windowsMove, 1, 3.0, wind, slide"
+          "fade, 1, 1.8, md3_decel"
+          "layersIn, 1, 1.8, menu_decel, slide"
+          "layersOut, 1, 1.5, menu_accel"
+          "fadeLayersIn, 1, 1.6, menu_decel"
+          "fadeLayersOut, 1, 1.8, menu_accel"
+          "workspaces, 1, 4.0, menu_decel, slide"
+          "specialWorkspace, 1, 2.3, md3_decel, slidefadevert 15%"
         ];
       };
       general = {
@@ -170,8 +199,12 @@ in {
         ", XF86AudioRaiseVolume, exec, volumectl -u up"
         ", XF86AudioLowerVolume, exec, volumectl -u down"
         ", XF86AudioMute, exec, volumectl toggle-mute"
+
         ", XF86MonBrightnessUp, exec, lightctl up"
         ", XF86MonBrightnessDown, exec, lightctl down"
+        "SUPER, F3, exec, lightctl up"
+        "SUPER, F2, exec, lightctl down"
+
         "ALT, Space, exec, rofi -show drun"
         "SUPER, T, exec, kitty"
         "SUPER, C, killactive,"
@@ -301,6 +334,7 @@ in {
       windowrulev2 = float,class:^(zen-beta)$,title:^(Picture-in-Picture)$
       windowrulev2 = float,class:^(xdg-desktop-portal-gtk)$
       windowrulev2 = stayfocused,class:^(io.missioncenter.MissionCenter)$
+      windowrulev2 = stayfocused,class:^(zenity)$
 
       exec-once = nwg-dock-hyprland  -f -i 24 -x -c "nwg-drawer -mt 5" -lp 'start'
       exec-once = waybar
@@ -336,10 +370,7 @@ in {
       name = "Tela-circle";
       package = pkgs.tela-circle-icon-theme;
     };
-    font = {
-      name = "JetBrains Mono"; # Format: "Font Family Style Size"
-      size = 11;
-    };
+
     theme = {
       name = "Dracula";
       package = pkgs.dracula-theme;
@@ -418,7 +449,9 @@ in {
       "application/xhtml+xml" = "zen-beta.desktop";
       "application/x-extension-xhtml" = "zen-beta.desktop";
       "application/x-extension-xht" = "zen-beta.desktop";
+      "text/plain" = "org.gnome.TextEditor.desktop";
     };
+
     associations.added = {
       "x-scheme-handler/http" = "zen-beta.desktop";
       "x-scheme-handler/https" = "zen-beta.desktop";
@@ -1161,97 +1194,94 @@ in {
 
   xdg.configFile."nwg-drawer/drawer.css".text = ''
 
+    window {
+        background-color: rgba(20, 22, 25, 0.8);
+        color: #eeeeee
+    }
+
+    entry {
+        background-color: rgba (0, 0, 0, 0.2)
+    }
+
+    button, image {
+        all: unset;
+        background: none;
+        border: none;
+        border-radius: 12px;
+        padding: 6px;
+        margin: 0px 4px;
+    }
+
+    button:hover {
+        background-color: rgba (255, 255, 255, 0.1)
+
+    }
+
+    #category-button {
+        margin: 0 10px 0 10px
+    }
+
+    #pinned-box {
+        padding-bottom: 5px;
+        border-bottom: 1px dotted gray
+    }
+
+    #files-box {
+        padding: 5px;
+        border: 1px dotted gray;
+        border-radius: 15px
+    }
+
+    #math-label {
+        font-weight: bold;
+        font-size: 16px
+    }
+
+  '';
+  xdg.configFile."nwg-dock-hyprland/style.css".text = ''
+
+
       window {
-          background-color: rgba(20, 22, 25, 0.8);
-          color: #eeeeee
+        background: rgba(20,20,20, 0.75);
       }
 
-      entry {
-          background-color: rgba (0, 0, 0, 0.2)
+      #box {
+        padding: 10px
+      }
+
+      #active {
+      	border-bottom: solid 0px;
+      	border-color: rgba(255, 255, 255, 0.3)
       }
 
       button, image {
-          all: unset;
-          background: none;
-          border: none;
-          border-radius: 12px;
-          padding: 6px;
-          margin: 0px 4px;
+      	background: none;
+      	border-style: none;
+      	box-shadow: none;
+      	color: #999
       }
 
-      button:hover {
-          background-color: rgba (255, 255, 255, 0.1)
-
-      }
-
-      #category-button {
-          margin: 0 10px 0 10px
-      }
-
-      #pinned-box {
-          padding-bottom: 5px;
-          border-bottom: 1px dotted gray
-      }
-
-      #files-box {
-          padding: 5px;
-          border: 1px dotted gray;
-          border-radius: 15px
-      }
-
-      #math-label {
-          font-weight: bold;
-          font-size: 16px
-      }
-
-    '';
-    xdg.configFile."nwg-dock-hyprland/style.css".text = ''
-
-
-        window {
-          background: rgba(20,20,20, 0.75);
-        }
-
-        #box {
-          padding: 10px
-        }
-
-        #active {
-        	border-bottom: solid 0px;
-        	border-color: rgba(255, 255, 255, 0.3)
-        }
-
-        button, image {
-        	background: none;
-        	border-style: none;
-        	box-shadow: none;
-        	color: #999
-        }
-
-        button {
-        	padding: 4px;
-        	margin-left: 4px;
-        	margin-right: 4px;
-        	color: #eee;
-          font-size: 12px
-        }
-
-
-        button:focus {
-        	box-shadow: none
-        }
-
-      button:hover{
-          outline: 1px solid rgba(255,255,255, 0.5);
-          outline-offset: 1px;
+      button {
+      	padding: 4px;
+      	margin-left: 4px;
+      	margin-right: 4px;
+      	color: #eee;
+        font-size: 12px
       }
 
 
-    '';
+      button:focus {
+      	box-shadow: none
+      }
 
+    button:hover{
+        outline: 1px solid rgba(255,255,255, 0.5);
+        outline-offset: 1px;
+    }
+
+
+  '';
   home.file = {
-    ".local/share/fonts/PPNeueMachina-Ultrabold.otf".source = ./fonts/PPNeueMachina-Ultrabold.otf;
-
     ".scripts/performance_toggle.sh" = {
       text = ''
 
@@ -1292,7 +1322,6 @@ in {
       '';
       executable = true;
     };
-
   };
 
   # Home Manager can also manage your environment variables through

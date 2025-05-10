@@ -41,33 +41,45 @@
       config.allowUnfree = true;
       overlays = [
         (final: prev: {
-          unstable = import nixpkgs-unstable{
+          unstable = import nixpkgs-unstable {
             inherit system;
             config.allowUnfree = true;
           };
         })
         nur.overlays.default
       ];
-    }; 
+    };
 
+    ptMonoFont = pkgs.stdenv.mkDerivation {
+      pname = "pt-mono";
+      version = "1.0";
+      src = ./fonts/PTMono-Regular.ttf;
+
+      dontUnpack = true;
+
+      installPhase = ''
+        mkdir -p $out/share/fonts/truetype
+        cp $src $out/share/fonts/truetype/PTMono-Regular.ttf
+      '';
+    };
   in {
     nixosConfigurations = {
       "${host_name}" = nixpkgs.lib.nixosSystem {
         inherit pkgs;
         inherit system;
         modules = [
-          ./nixos/configuration.nix
+          ./system/configuration.nix
         ];
         specialArgs = {
           inherit inputs;
           inherit host_name;
           inherit user_name;
-
+          inherit ptMonoFont;
         };
       };
     };
 
- homeConfigurations = {
+    homeConfigurations = {
       "${user_name}" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
         extraSpecialArgs = {
@@ -80,6 +92,5 @@
         ];
       };
     };
-
   };
 }

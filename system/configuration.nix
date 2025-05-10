@@ -5,6 +5,7 @@
   inputs,
   host_name,
   user_name,
+  ptMonoFont,
   ...
 }: let
   zsh-vi-mode-custom = pkgs.stdenv.mkDerivation {
@@ -79,8 +80,8 @@ in {
   environment.systemPackages = with pkgs; [
     inputs.zen-browser.packages."${pkgs.system}".default
     inputs.home-manager.packages."${pkgs.system}".default
-    linuxConsoleTools # For jstest-gtk
-    jstest-gtk
+    gnome-text-editor
+    zenity
     nur.repos.ataraxiasjel.waydroid-script
     poweralertd
     pamixer
@@ -228,6 +229,7 @@ in {
       (nerdfonts.override {fonts = ["JetBrainsMono"];})
       jetbrains-mono
       font-awesome
+      ptMonoFont
     ];
 
     fontconfig = {
@@ -241,8 +243,9 @@ in {
   networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-  time.hardwareClockInLocalTime = true;
-  time.timeZone = "Asia/Manila";
+  time.timeZone = "UTC";
+  time.hardwareClockInLocalTime = false;
+  services.timesyncd.enable = true;
 
   services.upower = {
     enable = true;
