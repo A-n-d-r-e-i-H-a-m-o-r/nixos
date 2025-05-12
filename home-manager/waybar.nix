@@ -1,150 +1,173 @@
 {
   home.file.".config/waybar/config".text = ''
 
-    {
-            "layer": "top",
-            "position": "top",
-            "reload_style_on_change": true,
-            "height": 45,
-            "margin-top": 3,
-            "margin-left": 5,
-            "margin-right": 5,
-            "modules-left": ["custom/notification", "custom/power", "clock","tray"],
-            "modules-center": ["hyprland/workspaces"],
-            "modules-right": ["mpris","group/expand", "battery"],
+        {
+                "layer": "top",
+                "position": "top",
+                "reload_style_on_change": true,
+                "height": 45,
+                "margin-top": 3,
+                "margin-left": 5,
+                "margin-right": 5,
+                "modules-left": ["custom/notification", "custom/power", "clock", "tray"],
+                "modules-center": ["hyprland/workspaces"],
+                "modules-right": ["mpris","group/expand", "battery", "disk"],
 
-            "mpris": {
-                "format": "PLAYING: {player_icon} {dynamic}",
-                "format-paused": "{status_icon} <i>{dynamic}</i>",
-                "player-icons": {
-                    "default": "▶",
-                    "spotify": " ",
+                "mpris": {
+                    "format": "PLAYING: {player_icon} {dynamic}",
+                    "format-paused": "{status_icon} <i>{dynamic}</i>",
+                    "player-icons": {
+                        "default": "▶",
+                        "spotify": " ",
+                    },
+                    "status-icons": {
+                        "paused": "⏸"
+                    },
+                   "dynamic-importance-order": ["title", "artist", "position", "length", "album"],
+                   "dynamic-len": 30,
+                   "ignored-players": ["firefox"],
+                   "interval": 1,
+                   "on-scroll-up": "volumectl -u up",
+                   "on-scroll-down": "volumectl -u down"
                 },
-                "status-icons": {
-                    "paused": "⏸"
-                },
-               "dynamic-importance-order": ["title", "artist", "position", "length", "album"],
-               "dynamic-len": 30,
-               "ignored-players": ["firefox"],
-               "interval": 1
-            },
-            "hyprland/workspaces": {
-                "persistent-workspaces": {
-                    "*": [ 1,2,3,4,5 ]
-                }
-            },
-            "custom/notification": {
-                "tooltip": false,
-                "format": "",
-                "on-click": "swaync-client -t -sw",
-                "escape": true
-            },
-            "clock": {
-                "format": " {:%I:%M:%S %p} ",
-                "interval": 1,
-                "tooltip-format": "<tt>{calendar}</tt>",
-                "calendar": {
-                    "format": {
-                        "today": "<span color='#fAfBfC'><b>{}</b></span>"
+                "hyprland/workspaces": {
+                    "persistent-workspaces": {
+                        "*": [ 1,2,3,4,5 ]
                     }
                 },
-                "actions": {
-                    "on-click-right": "shift_down",
-                    "on-click": "shift_up"
-                }
-            },
-            "bluetooth": {
-                "format-on": "󰂯",
-                "format-off": "BT-off",
-                "format-disabled": "󰂲",
-                "format-connected-battery": "{device_battery_percentage}% 󰂯",
-                "format-alt": "{device_alias} 󰂯",
-                "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
-                "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
-                "tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
-                "tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
-                "on-click-right": "blueman-manager",
-            },
-            "battery": {
-                "interval": 1,
-                "states": {
-                    "good": 95,
-                    "warning": 30,
-                    "critical": 20
+                "custom/notification": {
+                    "tooltip": false,
+                    "format": "",
+                    "on-click": "swaync-client -t -sw",
+                    "escape": true
                 },
-                "format": "{capacity}% {icon}",
-                "format-charging": "{capacity}% 󰂄",
-                "format-alt": "{time} {icon}",
-                "format-icons": [
-                    "󰁻",
-                "󰁼",
-                "󰁾",
-                "󰂀",
-                "󰂂",
-                "󰁹"
-                ],
-            },
-            "custom/expand": {
-                "format": "",
-                "tooltip": false
-            },
-            "custom/endpoint":{
-                "format": "|",
-                "tooltip": false
-            },
-            "group/expand": {
-                "orientation": "horizontal",
-                "drawer": {
-                    "transition-duration": 600,
-                    "transition-to-left": true,
-                    "click-to-reveal": true
+                "clock": {
+                    "format": " {:%I:%M:%S %p} ",
+                    "interval": 1,
+                    "tooltip-format": "<tt>{calendar}</tt>",
+                    "calendar": {
+                        "format": {
+                            "today": "<span color='#fAfBfC'><b>{}</b></span>"
+                        }
+                    },
+                    "actions": {
+                        "on-click-right": "shift_down",
+                        "on-click": "shift_up"
+                    }
                 },
-                "modules": ["custom/expand", "temperature","cpu","memory","wireplumber","custom/endpoint"],
-            },
-            "custom/colorpicker": {
-                "format": "{}",
-                "return-type": "json",
-                "interval": "once",
-                "exec": "~/.config/waybar/scripts/colorpicker.sh -j",
-                "on-click": "~/.config/waybar/scripts/colorpicker.sh",
-                "signal": 1
-            },
+                "bluetooth": {
+                    "format-on": "󰂯",
+                    "format-off": "BT-off",
+                    "format-disabled": "󰂲",
+                    "format-connected-battery": "{device_battery_percentage}% 󰂯",
+                    "format-alt": "{device_alias} 󰂯",
+                    "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
+                    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
+                    "tooltip-format-enumerate-connected": "{device_alias}\n{device_address}",
+                    "tooltip-format-enumerate-connected-battery": "{device_alias}\n{device_address}\n{device_battery_percentage}%",
+                    "on-click-right": "blueman-manager",
+                },
+                "battery": {
+                    "interval": 1,
+                    "states": {
+                        "good": 95,
+                        "warning": 30,
+                        "critical": 20
+                    },
+                    "format": "{capacity}% {icon}",
+                    "format-charging": "{capacity}% 󰂄",
+                    "format-alt": "{time} {icon}",
+                    "format-icons": [
+                        "󰁻",
+                    "󰁼",
+                    "󰁾",
+                    "󰂀",
+                    "󰂂",
+                    "󰁹"
+                    ],
+                },
+                "custom/expand": {
+                    "format": "",
+                    "tooltip": false
+                },
+                "custom/endpoint":{
+                    "format": "|",
+                    "tooltip": false
+                },
+                "group/expand": {
+                    "orientation": "horizontal",
+                    "drawer": {
+                        "transition-duration": 600,
+                        "transition-to-left": true,
+                        "click-to-reveal": true
+                    },
+                    "modules": ["custom/expand", "temperature","cpu","memory", "backlight", "wireplumber","custom/endpoint"],
+                },
+                "custom/colorpicker": {
+                    "format": "{}",
+                    "return-type": "json",
+                    "interval": "once",
+                    "exec": "~/.config/waybar/scripts/colorpicker.sh -j",
+                    "on-click": "~/.config/waybar/scripts/colorpicker.sh",
+                    "signal": 1
+                },
+
     "custom/power": {
         "format": "",
         "on-click": "wlogout -b 2 -c 0 -r 0 -m 0 --protocol layer-shell",
         "tooltip": false
     },
-"upower": {
-     "icon-size": 13,
-     "hide-if-empty": true,
-     "tooltip": true,
-     "tooltip-spacing": 20
-},
 
-            "cpu": {
-                "format": "󰻠  {usage}%",
-                "tooltip": true
-            },
+    "upower": {
+         "icon-size": 13,
+         "hide-if-empty": true,
+         "tooltip": true,
+         "tooltip-spacing": 20
+    },
 
-"wireplumber": {
-    "format": "  {volume}%",
-    "tooltip": false,
-},
-"memory": {
-    "interval": 10,
-    "format": "  {}%"
-},
-            "temperature": {
-                "thermal-zone": 1,              
-                "critical-threshold": 80,
-                "format": " {temperatureC}°C",
-                "interval": 5
-            },
-            "tray": {
-                "icon-size": 14,
-                "spacing": 10
-            },
-    }
+    "cpu": {
+        "format": "󰻠  {usage}%",
+        "tooltip": true
+    },
+
+    "wireplumber": {
+        "format": "  {volume}%",
+        "tooltip": false,
+        "on-scroll-up": "volumectl -u up",
+        "on-scroll-down": "volumectl -u down"
+    },
+
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon}  {percent}%",
+        "format-icons": ["", ""],
+        "on-scroll-up": "lightctl up",
+        "on-scroll-down": "lightctl down"
+    },
+
+    "disk": {
+        "interval": 30,
+        "format": "{specific_used:0.2f} GB used",
+        "path": "/home",
+        "unit": "GB"
+    },
+
+    "memory": {
+        "interval": 10,
+        "format": "  {}%"
+    },
+
+    "temperature": {
+        "thermal-zone": 1,
+        "critical-threshold": 80,
+        "format": " {temperatureC}°C",
+        "interval": 5
+    },
+                "tray": {
+                    "icon-size": 14,
+                    "spacing": 10
+                },
+        }
 
 
   '';
@@ -192,13 +215,15 @@
         transition: all 0.3s ease;
         color: #950CFB;
       }
-        
+
 
       /* Module styling */
       #custom-power,
       #custom-notification,
       #clock,
       #bluetooth,
+      #backlight,
+      #disk,
       #battery,
       #cpu,
       #memory,
@@ -210,6 +235,7 @@
       }
 
       #temperature,
+      #backlight,
       #cpu,
       #memory,
       #wireplumber {
@@ -241,7 +267,7 @@
       #battery {
         background: transparent;
       }
-    
+
       #battery.charging {
         color: #26A65B;
       }
@@ -250,6 +276,11 @@
         color: #ffbe61;
 
       }
+
+    #temperature.critical {
+        color: #f53c3c;
+
+    }
 
       #battery.critical:not(.charging) {
         color: #f53c3c;

@@ -80,8 +80,13 @@ in {
   environment.systemPackages = with pkgs; [
     inputs.zen-browser.packages."${pkgs.system}".default
     inputs.home-manager.packages."${pkgs.system}".default
+    unstable.nh
     gnome-text-editor
+
     zenity
+    yad
+    kdePackages.kdialog
+
     nur.repos.ataraxiasjel.waydroid-script
     poweralertd
     pamixer
