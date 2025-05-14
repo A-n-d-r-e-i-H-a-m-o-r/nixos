@@ -5,13 +5,13 @@
                 "layer": "top",
                 "position": "top",
                 "reload_style_on_change": true,
-                "height": 45,
+                "height": 30,
                 "margin-top": 3,
                 "margin-left": 5,
                 "margin-right": 5,
-                "modules-left": ["custom/notification", "custom/power", "clock", "tray"],
+                "modules-left": ["custom/notification", "custom/power", "clock",  "group/expand_left", "tray"],
                 "modules-center": ["hyprland/workspaces"],
-                "modules-right": ["mpris","group/expand", "battery", "disk"],
+                "modules-right": ["mpris","group/expand", "idle_inhibitor", "battery"],
 
                 "mpris": {
                     "format": "PLAYING: {player_icon} {dynamic}",
@@ -42,18 +42,15 @@
                     "escape": true
                 },
                 "clock": {
-                    "format": " {:%I:%M:%S %p} ",
+                    "format": "{:%a | %b %d, %Y | %I:%M:%S %p}",
+                    "format-alt": "{:%I:%M:%S %p}",
                     "interval": 1,
                     "tooltip-format": "<tt>{calendar}</tt>",
                     "calendar": {
                         "format": {
-                            "today": "<span color='#fAfBfC'><b>{}</b></span>"
+                            "today": "<span color='#950CFB'><b>{}</b></span>"
                         }
                     },
-                    "actions": {
-                        "on-click-right": "shift_down",
-                        "on-click": "shift_up"
-                    }
                 },
                 "bluetooth": {
                     "format-on": "󰂯",
@@ -86,14 +83,33 @@
                     "󰁹"
                     ],
                 },
+
+
                 "custom/expand": {
                     "format": "",
                     "tooltip": false
                 },
+
+                "custom/expand_left": {
+                    "format": "",
+                    "tooltip": false
+                },
+
+                "group/expand_left": {
+                    "orientation": "horizontal",
+                    "drawer": {
+                        "transition-duration":300,
+                        "transition-to-right": true,
+                        "click-to-reveal": true
+                    },
+                    "modules": ["custom/expand_left",  "disk", "custom/expand_left"],
+                },
+
                 "custom/endpoint":{
                     "format": "|",
                     "tooltip": false
                 },
+
                 "group/expand": {
                     "orientation": "horizontal",
                     "drawer": {
@@ -111,7 +127,14 @@
                     "on-click": "~/.config/waybar/scripts/colorpicker.sh",
                     "signal": 1
                 },
-
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        },
+        "on-click": "notify-send -t 1500 'Idle Inhibitor' 'Updated'"
+    },
     "custom/power": {
         "format": "",
         "on-click": "wlogout -b 2 -c 0 -r 0 -m 0 --protocol layer-shell",
@@ -142,7 +165,8 @@
         "format": "{icon}  {percent}%",
         "format-icons": ["", ""],
         "on-scroll-up": "lightctl up",
-        "on-scroll-down": "lightctl down"
+        "on-scroll-down": "lightctl down",
+        "tooltip": false
     },
 
     "disk": {
@@ -178,7 +202,7 @@
     style = ''
 
       * {
-        font-size: 13px;
+        font-size: 11px;
         font-family: "JetBrains Mono Nerd Font";
       }
 
@@ -204,9 +228,14 @@
         color: #f8f8f2;
       }
 
+      #idle_inhibitor.activated {
+        color: #26A65B;
+      }
+
       #clock:hover,
       #custom-notification:hover,
       #custom-power:hover,
+      #idle_inhibitor:hover,
       #bluetooth:hover,
       #battery:hover,
       #cpu:hover,
@@ -216,9 +245,8 @@
         color: #950CFB;
       }
 
-
-      /* Module styling */
       #custom-power,
+      #idle_inhibitor,
       #custom-notification,
       #clock,
       #bluetooth,
@@ -234,13 +262,6 @@
         transition: all 0.3s ease;
       }
 
-      #temperature,
-      #backlight,
-      #cpu,
-      #memory,
-      #wireplumber {
-        font-size: 12px;
-      }
 
       #workspaces {
         padding: 0 10px;
@@ -287,6 +308,7 @@
         animation: blink 0.5s linear infinite alternate;
       }
 
+      #custom-expand_left,
       #custom-expand {
         padding: 0 10px;
         color: rgba(248, 248, 242, 0.2);
@@ -294,6 +316,7 @@
         transition: all 0.3s ease;
       }
 
+      #custom-expand_left:hover,
       #custom-expand:hover {
         color: rgba(255, 255, 255, 0.2);
         text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);

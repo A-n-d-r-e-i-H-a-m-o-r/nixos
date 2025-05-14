@@ -383,6 +383,10 @@
       vim.api.nvim_command('highlight LineNr guibg=NONE ctermbg=NONE')
       vim.api.nvim_command('highlight SignColumn guibg=NONE ctermbg=NONE')
       vim.api.nvim_command('highlight EndOfBuffer guibg=NONE ctermbg=NONE')     
+
+
+    vim.api.nvim_set_hl(0, 'LineNr', { fg = '#ffffff' })
+    vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#ffffff', bold = true })
     '';
   };
 }

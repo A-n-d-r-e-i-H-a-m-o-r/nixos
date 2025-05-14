@@ -9,7 +9,12 @@
       type = "git";
       url = "https://github.com/hyprwm/Hyprland";
       submodules = true;
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprland-plugins = {
+      url = "github:hyprwm/hyprland-plugins";
+      inputs.hyprland.follows = "hyprland";
     };
     Hyprspace = {
       url = "github:KZDKM/Hyprspace";
@@ -50,7 +55,7 @@
         nur.overlays.default
       ];
     };
-    fonts = import ./fonts { inherit pkgs; };
+    fonts = import ./fonts {inherit pkgs;};
   in {
     nixosConfigurations = {
       "${host_name}" = nixpkgs.lib.nixosSystem {

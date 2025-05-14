@@ -5,7 +5,7 @@
 }: {
   xdg.configFile."rofi/theme.rasi".text = ''
     * {
-        background:     rgba(20, 20, 20, 0.8);
+        background:     rgba(50, 50, 50, 0.6);
         background-alt: #282B31FF;
         foreground:     #FFFFFFFF;
         selected:       #61AFEFFF;
@@ -27,13 +27,16 @@
     	display-ssh:                "  SSH";
     	drun-display-format:        "{name}";
     	window-format:              "{w} · {c} · {t}";
+        hover-select: true;
+        me-select-entry: "";
+        me-accept-entry: "MousePrimary";
     }
 
     /*****----- Global Properties -----*****/
     @import                          "theme.rasi"
 
     * {
-        font: "JetBrains Mono Nerd Font 10";
+        font: "SF Mono 10";
       	border-colour:                var(selected);
         handle-colour:               var(selected);
         background-colour:           var(background);
@@ -66,7 +69,7 @@
         location:                    center;
         anchor:                      center;
         fullscreen:                  false;
-        width:                       800px;
+        width:                       660px;
         x-offset:                    0px;
         y-offset:                    0px;
 
@@ -74,9 +77,9 @@
         enabled:                     true;
         margin:                      0px;
         padding:                     0px;
-        border:                      1px solid;
-        border-radius:               12px;
-      	border-color:                rgba(255, 255, 255, 0.6);
+        border:                      2px solid;
+        border-radius:               18px;
+      	border-color:                rgba(125,125,125,0.4);
         cursor:                      "default";
         /* Backgroud Colors */
         background-color:            @background-colour;
@@ -95,7 +98,7 @@
         enabled:                     true;
         spacing:                     10px;
         margin:                      0px;
-        padding:                     20px;
+        padding:                     15px;
         border:                      0px solid;
         border-radius:               0px 0px 0px 0px;
         border-color:                @border-colour;
@@ -121,7 +124,7 @@
         border:                      0px solid;
         border-radius:               8px;
         border-color:                @border-colour;
-        background-color:            @alternate-background;
+        background-color:            transparent;
         text-color:                  @foreground-colour;
         children:                    [ "textbox-prompt-colon", "entry" ];
     }
@@ -180,7 +183,7 @@
         lines:                       8;
         cycle:                       true;
         dynamic:                     true;
-        scrollbar:                   true;
+        scrollbar:                   false;
         layout:                      vertical;
         reverse:                     false;
         fixed-height:                true;
@@ -229,8 +232,8 @@
         text-color:                  var(active-foreground);
     }
     element selected.normal {
-        background-color:            var(selected-normal-background);
-        text-color:                  var(selected-normal-foreground);
+        background-color:            rgba(125,125,125,0.2);
+        text-color:                  white;
     }
     element selected.urgent {
         background-color:            var(selected-urgent-background);
