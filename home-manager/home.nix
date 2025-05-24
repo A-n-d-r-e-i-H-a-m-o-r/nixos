@@ -23,6 +23,9 @@ in {
   home.stateVersion = "24.11";
 
   home.packages = with pkgs; [
+    blender
+    transmission_4
+    libreoffice
     protontricks
     cartridges
     bottles
@@ -134,6 +137,7 @@ in {
     enable = true;
     plugins = [
       pkgs.hyprlandPlugins.hyprbars
+      pkgs.hyprlandPlugins.hyprfocus
       pkgs.hyprlandPlugins.hyprspace
       pkgs.hyprlandPlugins.hyprexpo
     ];
@@ -142,6 +146,7 @@ in {
       exec-once = [
         "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+        "${home_dir}/.scripts/startup.sh"
       ];
       input = {
         touchpad = {
@@ -206,6 +211,7 @@ in {
 
       bind = [
         "SUPER+SHIFT, S, exec, hyprshot -m region"
+        "SUPER, S, overview:toggle"
         "SUPER+SHIFT, C, exec, hyprpicker -a"
         ", PRINT, exec, hyprshot -m window"
         ", XF86AudioRaiseVolume, exec, volumectl -u up"
@@ -229,6 +235,7 @@ in {
         "SUPER, V, exec, nwg-clipman"
 
         "SUPER SHIFT, T, pin"
+        "SUPER SHIFT, T, exec, notify-send -t 1500 'Hyprland Controls' 'Pinned'"
 
         "SUPER SHIFT, J, movewindow, l"
         "SUPER SHIFT, L, movewindow, r"
@@ -289,12 +296,12 @@ in {
       layerrule = [
         "blur, rofi"
         "blur, waybar"
-        "blur, nwg-dock"
         "blur, nwg-drawer"
         "blur, swaync-control-center"
         "animation slide right, swaync-control-center"
         "animation slide bottom, nwg-drawer"
         "noanim, hyprswitch"
+        "noanim, selection"
         "blur, hyprswitch"
         "blur, swaync-notification-window"
         "animation slide right, swaync-notification-window"
@@ -303,7 +310,6 @@ in {
         "animation slide bottom, avizo"
         "ignorezero, avizo"
         "ignorezero, hyprswitch"
-        "ignorezero, nwg-dock"
         "ignorezero, rofi"
         "ignorezero, swaync-control-center"
         "ignorezero, swaync-notification-window"
@@ -337,17 +343,26 @@ in {
       xwayland = {
         force_zero_scaling = true;
       };
-      monitor = [",preferred,auto,1"];
+      monitor = [
+        "eDP-1, 1920x1080@60, 1920x0, 1"
+        "HDMI-A-1, 1920x1080@60, 0x0, 1"
+
+      ];
     };
     extraConfig = ''
 
+        workspace = 1, monitor:eDP-1
+        workspace = 2, monitor:eDP-1
+        workspace = 3, monitor:eDP-1
+        workspace = 4, monitor:HDMI-A-1
+        workspace = 5, monitor:HDMI-A-1
 
         windowrulev2 = workspace 3 silent,class:^(Waydroid)$
-        windowrulev2 = float, class:^(PacketTracer)$
         windowrulev2 = idleinhibit focus, class:^(mpv)$
         windowrulev2 = idleinhibit fullscreen, class:^(zen-beta)$
         windowrulev2 = idleinhibit fullscreen, class:^(com.stremio.stremio)$
         windowrulev2 = float,class:^(zen-beta)$,title:^(Picture-in-Picture)$
+        windowrulev2 = stayfocused,class:^(zen-beta)$,title:^(File Upload)$
         windowrulev2 = float,class:^(xdg-desktop-portal-gtk)$
         windowrulev2 = stayfocused,class:^(xdg-desktop-portal-gtk)$
         windowrulev2 = stayfocused,class:^(io.missioncenter.MissionCenter)$
@@ -359,8 +374,10 @@ in {
           windowrulev2 = stayfocused, class:^(yad)$
           windowrulev2 = pin, class:^(yad)$
 
-
+        
+        env = HYPRSHOT_DIR, ${home_dir}/Pictures/Screenshots
         exec-once = nwg-dock-hyprland  -f -i 22 -x -c "nwg-drawer -mt 5" -lp 'start'
+        exec-once = wvkbd-mobintl -L 300 --hidden
         exec-once = waybar
         exec-once = swaync
         exec-once = swww-daemon
@@ -378,6 +395,8 @@ in {
         exec-once = waydroid show-full-ui
         exec-once = [workspace 4 silent] spotify
 
+
+
         gestures {
           workspace_swipe = true
           workspace_swipe_cancel_ratio = 0.15
@@ -385,7 +404,6 @@ in {
 
 
       plugin {
-
           hyprbars {
               bar_color = rgba(20,20,20,0.6)
               bar_blur = true
@@ -407,8 +425,37 @@ in {
               workspace_method = center current # [center/first] [workspace] e.g. first 1 or center m+1
 
             enable_gesture = false
-          }
+              }
 
+        hyprfocus {
+                enabled = no
+                animate_floating = yes
+                animate_workspacechange = no
+                focus_animation = shrink
+                # Beziers for focus animations
+                bezier = bezIn, 0.5,0.0,1.0,0.5
+                bezier = bezOut, 0.0,0.5,0.5,1.0
+                bezier = overshot, 0.05, 0.9, 0.1, 1.05
+                bezier = smoothOut, 0.36, 0, 0.66, -0.56
+                bezier = smoothIn, 0.25, 1, 0.5, 1
+                bezier = realsmooth, 0.28,0.29,.69,1.08
+                # Flash settings
+                flash {
+                    flash_opacity = 0.95
+                    in_bezier = realsmooth
+                    in_speed = 0.5
+                    out_bezier = realsmooth
+                    out_speed = 3
+                }
+                # Shrink settings
+                shrink {
+                    shrink_percentage = 0.98
+                    in_bezier = realsmooth
+                    in_speed = 1
+                    out_bezier = realsmooth
+                    out_speed = 2
+                }
+        }
 
       }
 
@@ -455,7 +502,7 @@ in {
           on-resume = "hyprctl dispatch dpms on";
         }
         {
-          timeout = 1200;
+          timeout = 1800;
           on-timeout = "systemctl suspend";
         }
       ];
@@ -474,18 +521,9 @@ in {
     };
   };
 
+
   home.sessionVariables = {
-    GDK_BACKEND = "wayland";
-    QT_QPA_PLATFORMTHEME = "qt5ct";
-    QT_STYLE_OVERRIDE = "kvantum";
-    MOZ_ENABLE_WAYLAND = 1;
-    WLR_BACKEND = "vulkan";
-    WLR_RENDERER = "vulkan";
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    XDG_SESSION_TYPE = "wayland";
-    XDG_SESSION_DESKTOP = "Hyprland";
-    SDL_VIDEODRIVER = "wayland";
-    CLUTTER_BACKEND = "wayland";
+    HYPRSHOT_DIR = "${home_dir}/Pictures/Screenshots";
   };
 
   xdg.mimeApps = {
@@ -528,10 +566,10 @@ in {
 
   xdg.configFile."avizo/config.ini".text = ''
     [default]
-    time = 2.0
-    fade-out = 0.2
+    time = 4.0
+    fade-out = 0.3
     y-offset = 0.5
-    background = rgba(255, 255, 255, 0.1)
+    background = rgba(0, 0, 0, 0.2)
   '';
 
   xdg.configFile."swaync/config.json".text = ''
@@ -544,7 +582,7 @@ in {
       "cssPriority": "application",
 
       "control-center-exclusive-zone": false,
-      "control-center-width": 650,
+      "control-center-width": 550,
       "fit-to-screen": true,
 
       "notification-icon-size": 64,
@@ -1294,6 +1332,7 @@ in {
   '';
   home.file = {
     "Pictures/Wallpapers/scenery1.jpg".source = ./assets/scenery1.jpg;
+    "Pictures/Wallpapers/scenery2.jpg".source = ./assets/scenery2.jpg;
 
     ".scripts/performance_toggle.sh" = {
       text = ''
@@ -1308,7 +1347,7 @@ in {
             exit
         fi
         hyprctl reload
-
+        echo "$HYPRGAMEMODE"
       '';
       executable = true;
     };
@@ -1317,7 +1356,7 @@ in {
       text = ''
         #!/run/current-system/sw/bin/bash
 
-        sleep 1
+        sleep 3
         portal_list=$(ps -fu ${user_name}|grep xdg-desktop-portal|grep -v grep|sort|awk -F " " '{print $8}')
 
         for portal in $portal_list; do
@@ -1344,8 +1383,8 @@ in {
       $scrPath      = ./.hyprlock/scripts/
       $USER         = Andrei
       $host         = uname -n
-      $wallpaper    = ./assets/scenery_wallpaper_1.jpg
-      $blur         = 1
+      $wallpaper    = ${home_dir}/Pictures/Wallpapers/scenery2.jpg
+      $blur         = 2
 
       # ADJUST HERE
       $rounding     = 12

@@ -5,13 +5,13 @@
                 "layer": "top",
                 "position": "top",
                 "reload_style_on_change": true,
-                "height": 30,
+                "height": 35,
                 "margin-top": 3,
                 "margin-left": 5,
                 "margin-right": 5,
                 "modules-left": ["custom/notification", "custom/power", "clock",  "group/expand_left", "tray"],
                 "modules-center": ["hyprland/workspaces"],
-                "modules-right": ["mpris","group/expand", "idle_inhibitor", "battery"],
+                "modules-right": ["mpris","group/expand", "custom/wvkbd","custom/gamemode", "idle_inhibitor", "battery"],
 
                 "mpris": {
                     "format": "PLAYING: {player_icon} {dynamic}",
@@ -52,6 +52,12 @@
                         }
                     },
                 },
+            "custom/gamemode": {
+                "on-click": "/home/andrei_hamor/.scripts/performance_toggle.sh",
+                "format": "",
+                "tooltip": false
+            },
+
                 "bluetooth": {
                     "format-on": "󰂯",
                     "format-off": "BT-off",
@@ -135,12 +141,18 @@
         },
         "on-click": "notify-send -t 1500 'Idle Inhibitor' 'Updated'"
     },
+
     "custom/power": {
         "format": "",
         "on-click": "wlogout -b 2 -c 0 -r 0 -m 0 --protocol layer-shell",
         "tooltip": false
     },
 
+    "custom/wvkbd": {
+        "format": "",
+        "on-click": "kill -34 $(ps -C wvkbd-mobintl)",
+        "tooltip": false
+    },
     "upower": {
          "icon-size": 13,
          "hide-if-empty": true,
@@ -246,6 +258,8 @@
       }
 
       #custom-power,
+      #custom-wvkbd,
+      #custom-gamemode,
       #idle_inhibitor,
       #custom-notification,
       #clock,

@@ -8,6 +8,7 @@
   user_name,
   ...
 }: let
+  aagl-gtk-on-nix = import (builtins.fetchTarball "https://github.com/ezKEa/aagl-gtk-on-nix/archive/main.tar.gz");
   zsh-vi-mode-custom = pkgs.stdenv.mkDerivation {
     pname = "zsh-vi-mode-custom";
     version = "0.9.0-custom";
@@ -40,8 +41,10 @@
 in {
   imports = [
     ./hardware-configuration.nix
+    aagl-gtk-on-nix.module
   ];
 
+  programs.the-honkers-railway-launcher.enable = true;
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
@@ -77,12 +80,19 @@ in {
     options = "--delete-older-than 14d";
   };
 
+  nix.settings = {
+    substituters = ["https://ezkea.cachix.org"];
+    trusted-public-keys = ["ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="];
+  };
+
   environment.systemPackages = with pkgs; [
+    lutris
+    jdk23
     inputs.zen-browser.packages."${pkgs.system}".default
     inputs.home-manager.packages."${pkgs.system}".default
     unstable.nh
     gnome-text-editor
-
+    wvkbd
     zenity
     yad
     kdePackages.kdialog
@@ -198,7 +208,7 @@ in {
   };
 
   programs.hyprland = {
-    enable = true;  
+    enable = true;
     xwayland.enable = true;
   };
 
@@ -225,8 +235,7 @@ in {
     configPackages = [
       pkgs.xdg-desktop-portal-gtk
       pkgs.xdg-desktop-portal
-    ]; 
-
+    ];
   };
 
   fonts = {
@@ -251,9 +260,8 @@ in {
   networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-  time.timeZone = "UTC";
-  time.hardwareClockInLocalTime = false;
-  services.timesyncd.enable = true;
+  time.timeZone = "Asia/Manila";
+  time.hardwareClockInLocalTime = true;
 
   services.upower = {
     enable = true;
@@ -376,52 +384,52 @@ in {
 
   environment.etc."p10k.zsh".source = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
   programs.zsh.interactiveShellInit = ''
-                  source /etc/p10k.zsh
-                  source ${zsh-vi-mode-custom}/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-                  source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
-                  source ${pkgs.fzf}/share/fzf/key-bindings.zsh
-                  source ${pkgs.fzf}/share/fzf/completion.zsh
+          source /etc/p10k.zsh
+          source ${zsh-vi-mode-custom}/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+          source ${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh
+          source ${pkgs.fzf}/share/fzf/key-bindings.zsh
+          source ${pkgs.fzf}/share/fzf/completion.zsh
 
 
-                  ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-                  ZVM_VI_VISUAL_ESCAPE_BINDKEY=o
+          ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+          ZVM_VI_VISUAL_ESCAPE_BINDKEY=o
 
-                  function zvm_after_init() {
+          function zvm_after_init() {
 
-                      zvm_bindkey vicmd 'j' backward-char
-                      zvm_bindkey vicmd 'k' down-line-or-history
-                      zvm_bindkey vicmd 'i' up-line-or-history
-                      zvm_bindkey vicmd 'K' history-beginning-search-forward
-                      zvm_bindkey vicmd 'I' history-beginning-search-backward
-                      zvm_bindkey vicmd 'l' forward-char
-                      zvm_bindkey vicmd 'J' beginning-of-line
-                      zvm_bindkey vicmd 'L' end-of-line
+              zvm_bindkey vicmd 'j' backward-char
+              zvm_bindkey vicmd 'k' down-line-or-history
+              zvm_bindkey vicmd 'i' up-line-or-history
+              zvm_bindkey vicmd 'K' history-beginning-search-forward
+              zvm_bindkey vicmd 'I' history-beginning-search-backward
+              zvm_bindkey vicmd 'l' forward-char
+              zvm_bindkey vicmd 'J' beginning-of-line
+              zvm_bindkey vicmd 'L' end-of-line
 
 
-                      zvm_bindkey visual 'j' backward-char
-                      zvm_bindkey visual 'k' down-line-or-history
-                      zvm_bindkey visual 'i' up-line-or-history
-                      zvm_bindkey visual 'l' forward-char
-                      zvm_bindkey visual 'J' beginning-of-line
-                      zvm_bindkey visual 'L' end-of-line
+              zvm_bindkey visual 'j' backward-char
+              zvm_bindkey visual 'k' down-line-or-history
+              zvm_bindkey visual 'i' up-line-or-history
+              zvm_bindkey visual 'l' forward-char
+              zvm_bindkey visual 'J' beginning-of-line
+              zvm_bindkey visual 'L' end-of-line
 
-                  }
+          }
 
-            eval "$(${pkgs.zoxide}/bin/zoxide init --cmd cd zsh)"
+    eval "$(${pkgs.zoxide}/bin/zoxide init --cmd cd zsh)"
 
-            bindkey '^[[A' history-beginning-search-backward
-            bindkey '^[[B' history-beginning-search-forward
+    bindkey '^[[A' history-beginning-search-backward
+    bindkey '^[[B' history-beginning-search-forward
 
-            HISTDUP=erase
-            setopt appendhistory
-            setopt sharehistory
-            setopt hist_ignore_all_dups
-            setopt hist_save_no_dups
-            setopt hist_ignore_dups
-            setopt hist_find_no_dups
+    HISTDUP=erase
+    setopt appendhistory
+    setopt sharehistory
+    setopt hist_ignore_all_dups
+    setopt hist_save_no_dups
+    setopt hist_ignore_dups
+    setopt hist_find_no_dups
 
-            zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-            zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
   '';
 
