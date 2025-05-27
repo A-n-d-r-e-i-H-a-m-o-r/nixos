@@ -20,9 +20,11 @@ in {
   ];
   home.username = "${user_name}";
   home.homeDirectory = "${home_dir}";
-  home.stateVersion = "24.11";
+  home.stateVersion = "25.05";
 
   home.packages = with pkgs; [
+    eww
+    gapless
     blender
     transmission_4
     libreoffice
@@ -68,7 +70,12 @@ in {
     unstable.video-downloader
     mission-center
     upscaler
-
+    parabolic
+    foliate
+    kana
+    gnome-calendar
+    gnome-clocks
+    wordbook
     stremio
 
     unstable.pcsx2
@@ -76,11 +83,10 @@ in {
     unstable.mgba
     unstable.ppsspp
     unstable.cemu
-    unstable.torzu
     unstable.melonDS
     unstable.azahar
     unstable.dolphin-emu
-
+  
     unstable.scrcpy
 
     aseprite
@@ -137,7 +143,6 @@ in {
     enable = true;
     plugins = [
       pkgs.hyprlandPlugins.hyprbars
-      pkgs.hyprlandPlugins.hyprfocus
       pkgs.hyprlandPlugins.hyprspace
       pkgs.hyprlandPlugins.hyprexpo
     ];
@@ -346,7 +351,6 @@ in {
       monitor = [
         "eDP-1, 1920x1080@60, 1920x0, 1"
         "HDMI-A-1, 1920x1080@60, 0x0, 1"
-
       ];
     };
     extraConfig = ''
@@ -356,7 +360,9 @@ in {
         workspace = 3, monitor:eDP-1
         workspace = 4, monitor:HDMI-A-1
         workspace = 5, monitor:HDMI-A-1
+        
 
+        windowrulev2 = plugin:hyprbars:nobar, class:^(Waydroid)$
         windowrulev2 = workspace 3 silent,class:^(Waydroid)$
         windowrulev2 = idleinhibit focus, class:^(mpv)$
         windowrulev2 = idleinhibit fullscreen, class:^(zen-beta)$
@@ -374,7 +380,7 @@ in {
           windowrulev2 = stayfocused, class:^(yad)$
           windowrulev2 = pin, class:^(yad)$
 
-        
+
         env = HYPRSHOT_DIR, ${home_dir}/Pictures/Screenshots
         exec-once = nwg-dock-hyprland  -f -i 22 -x -c "nwg-drawer -mt 5" -lp 'start'
         exec-once = wvkbd-mobintl -L 300 --hidden
@@ -427,36 +433,9 @@ in {
             enable_gesture = false
               }
 
-        hyprfocus {
-                enabled = no
-                animate_floating = yes
-                animate_workspacechange = no
-                focus_animation = shrink
-                # Beziers for focus animations
-                bezier = bezIn, 0.5,0.0,1.0,0.5
-                bezier = bezOut, 0.0,0.5,0.5,1.0
-                bezier = overshot, 0.05, 0.9, 0.1, 1.05
-                bezier = smoothOut, 0.36, 0, 0.66, -0.56
-                bezier = smoothIn, 0.25, 1, 0.5, 1
-                bezier = realsmooth, 0.28,0.29,.69,1.08
-                # Flash settings
-                flash {
-                    flash_opacity = 0.95
-                    in_bezier = realsmooth
-                    in_speed = 0.5
-                    out_bezier = realsmooth
-                    out_speed = 3
-                }
-                # Shrink settings
-                shrink {
-                    shrink_percentage = 0.98
-                    in_bezier = realsmooth
-                    in_speed = 1
-                    out_bezier = realsmooth
-                    out_speed = 2
-                }
+        overview {
+            disableBlur = true
         }
-
       }
 
     '';
@@ -487,6 +466,7 @@ in {
   services.hypridle = {
     enable = true;
     settings = {
+
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
         ignore_dbus_inhibit = false;
@@ -520,7 +500,6 @@ in {
       credential.helpter = "store";
     };
   };
-
 
   home.sessionVariables = {
     HYPRSHOT_DIR = "${home_dir}/Pictures/Screenshots";
@@ -569,7 +548,7 @@ in {
     time = 4.0
     fade-out = 0.3
     y-offset = 0.5
-    background = rgba(0, 0, 0, 0.2)
+    background = rgba(125, 125, 125, 0.2)
   '';
 
   xdg.configFile."swaync/config.json".text = ''

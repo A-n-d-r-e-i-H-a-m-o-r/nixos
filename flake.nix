@@ -2,9 +2,12 @@
   description = "NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-old.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
     nur.url = "github:nix-community/NUR";
+
     hyprland = {
       type = "git";
       url = "https://github.com/hyprwm/Hyprland";
@@ -12,30 +15,26 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
-    };
-    Hyprspace = {
-      url = "github:KZDKM/Hyprspace";
-      inputs.hyprland.follows = "hyprland";
-    };
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix = {
       url = "github:gerg-l/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
-  
+    aagl.url = "github:ezKEa/aagl-gtk-on-nix";
+    aagl.inputs.nixpkgs.follows = "nixpkgs"; # Name of nixpkgs input you want to use
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable"; # IMPORTANT
   };
 
   outputs = {
     nixpkgs,
     nixpkgs-unstable,
+    nixpkgs-old,
     nur,
     home-manager,
     ...
@@ -53,6 +52,14 @@
             config.allowUnfree = true;
           };
         })
+
+        (final: prev: {
+          old = import nixpkgs-old {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        })
+
         nur.overlays.default
       ];
     };

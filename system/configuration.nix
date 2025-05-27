@@ -8,7 +8,6 @@
   user_name,
   ...
 }: let
-  aagl-gtk-on-nix = import (builtins.fetchTarball "https://github.com/ezKEa/aagl-gtk-on-nix/archive/main.tar.gz");
   zsh-vi-mode-custom = pkgs.stdenv.mkDerivation {
     pname = "zsh-vi-mode-custom";
     version = "0.9.0-custom";
@@ -41,10 +40,9 @@
 in {
   imports = [
     ./hardware-configuration.nix
-    aagl-gtk-on-nix.module
+    inputs.chaotic.nixosModules.default
   ];
 
-  programs.the-honkers-railway-launcher.enable = true;
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
@@ -80,12 +78,8 @@ in {
     options = "--delete-older-than 14d";
   };
 
-  nix.settings = {
-    substituters = ["https://ezkea.cachix.org"];
-    trusted-public-keys = ["ezkea.cachix.org-1:ioBmUbJTZIKsHmWWXPe1FSFbeVe+afhfgqgTSNd34eI="];
-  };
-
   environment.systemPackages = with pkgs; [
+    torzu_git
     lutris
     jdk23
     inputs.zen-browser.packages."${pkgs.system}".default
@@ -221,6 +215,8 @@ in {
       vpl-gpu-rt
       intel-media-driver
       vaapiIntel
+      vulkan-loader
+      libvdpau-va-gl
     ];
   };
 
@@ -240,12 +236,12 @@ in {
 
   fonts = {
     packages = with pkgs; [
-      (nerdfonts.override {fonts = ["JetBrainsMono"];})
       inputs.apple-fonts.packages.${system}.sf-pro
       inputs.apple-fonts.packages.${system}.sf-mono
       fonts.ptMono
       fonts.ppNeue
       jetbrains-mono
+      nerd-fonts.jetbrains-mono
       font-awesome
     ];
 
@@ -260,8 +256,7 @@ in {
   networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-  time.timeZone = "Asia/Manila";
-  time.hardwareClockInLocalTime = true;
+  time.timeZone = "UTC";
 
   services.upower = {
     enable = true;
@@ -341,7 +336,8 @@ in {
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
-  hardware.pulseaudio.enable = false;
+
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

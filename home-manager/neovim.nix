@@ -15,8 +15,6 @@
     nixd
     nixpkgs-fmt
 
-    nodejs_23
-
     ripgrep
     fd
   ];
