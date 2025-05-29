@@ -79,6 +79,8 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
+    jetbrains.rust-rover
+    jetbrains.pycharm-community-bin
     torzu_git
     lutris
     jdk23
@@ -104,7 +106,7 @@ in {
     zsh-powerlevel10k
     man-pages
     man-pages-posix
-    python3
+    python313
     alejandra
     kitty
     tmux
@@ -153,6 +155,7 @@ in {
     }
   ];
   services = {
+    flatpak.enable = true;
     dbus.enable = true;
     gvfs.enable = true;
 
@@ -256,8 +259,13 @@ in {
   networking.wireless.enable = false; # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-  time.timeZone = "UTC";
-
+  time.timeZone = "Asia/Manila";
+  services.timesyncd = {
+    enable = true;
+    servers = [
+      "time.google.com"
+    ];
+  };
   services.upower = {
     enable = true;
     percentageLow = 20;

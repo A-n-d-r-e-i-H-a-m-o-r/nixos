@@ -23,10 +23,12 @@ in {
   home.stateVersion = "25.05";
 
   home.packages = with pkgs; [
+    vscode
+    emote
+    fragments
     eww
     gapless
     blender
-    transmission_4
     libreoffice
     protontricks
     cartridges
@@ -86,7 +88,7 @@ in {
     unstable.melonDS
     unstable.azahar
     unstable.dolphin-emu
-  
+
     unstable.scrcpy
 
     aseprite
@@ -217,6 +219,7 @@ in {
       bind = [
         "SUPER+SHIFT, S, exec, hyprshot -m region"
         "SUPER, S, overview:toggle"
+        "SUPER, period, exec, emote"
         "SUPER+SHIFT, C, exec, hyprpicker -a"
         ", PRINT, exec, hyprshot -m window"
         ", XF86AudioRaiseVolume, exec, volumectl -u up"
@@ -360,9 +363,11 @@ in {
         workspace = 3, monitor:eDP-1
         workspace = 4, monitor:HDMI-A-1
         workspace = 5, monitor:HDMI-A-1
-        
 
         windowrulev2 = plugin:hyprbars:nobar, class:^(Waydroid)$
+        windowrulev2 = plugin:hyprbars:nobar, title:^(splash)$
+        windowrulev2 = plugin:hyprbars:nobar, class:^(emote)$
+        windowrulev2 = plugin:hyprbars:nobar,class:^(zen-beta)$,title:^(Picture-in-Picture)$
         windowrulev2 = workspace 3 silent,class:^(Waydroid)$
         windowrulev2 = idleinhibit focus, class:^(mpv)$
         windowrulev2 = idleinhibit fullscreen, class:^(zen-beta)$
@@ -466,7 +471,6 @@ in {
   services.hypridle = {
     enable = true;
     settings = {
-
       general = {
         lock_cmd = "pidof hyprlock || hyprlock";
         ignore_dbus_inhibit = false;
@@ -542,6 +546,7 @@ in {
       "application/x-extension-xht" = "zen-beta.desktop";
     };
   };
+
 
   xdg.configFile."avizo/config.ini".text = ''
     [default]
